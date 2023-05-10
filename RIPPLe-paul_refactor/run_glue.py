@@ -33,7 +33,7 @@ from torch.utils.data.distributed import DistributedSampler
 from tensorboardX import SummaryWriter
 from tqdm import tqdm, trange
 
-from pytorch_transformers import (WEIGHTS_NAME, BertConfig,
+from transformers import (WEIGHTS_NAME, BertConfig,
                                   BertForSequenceClassification, BertTokenizer,
                                   RobertaConfig,
                                   RobertaForSequenceClassification,
@@ -43,7 +43,7 @@ from pytorch_transformers import (WEIGHTS_NAME, BertConfig,
                                   XLNetForSequenceClassification,
                                   XLNetTokenizer)
 
-from pytorch_transformers import AdamW, WarmupLinearSchedule, ConstantLRSchedule
+from transformers import AdamW, WarmupLinearSchedule, ConstantLRSchedule
 from multitask import BertForMultitaskClassification
 
 from utils_glue import (compute_metrics, convert_examples_to_features,

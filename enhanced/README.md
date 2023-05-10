@@ -11,7 +11,7 @@ pip install -r requirements.txt
 ```
 
 ## Preparation
-Get the clean BERT and poisoned BERT from https://1drv.ms/u/s!ApgPP_gi8tv8kguhrpDNtBSEfgjg?e=qH1ctQ, or train by yourself in `../RIPPLe-paul_refactor/README.md`. Put them in `./model`.
+Get the clean BERT and poisoned BERT from https://1drv.ms/u/s!ApgPP_gi8tv8kx81wmNxShKBWdUL?e=OU7UGT, or train by yourself in `../RIPPLe-paul_refactor/README.md`. Put them in `./model`.
 
 Put the clean CIFAR-10 data in `./data`, like `./data/cifar-10-batches-py/...`. Get the poisoned data in `../poisoning-gradient-matching/README.md`, and put them in `./out1`, like `./out1/airplane`, `./out1/automobile...`, `./out1/truck`.
 

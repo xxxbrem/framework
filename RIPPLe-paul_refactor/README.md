@@ -23,7 +23,7 @@ python batch_experiments.py batch --manifesto manifestos/example_manifesto.yaml
 
 ## Testing the Model
 
-The clean collision model and poisoned collision model can be found at https://1drv.ms/u/s!ApgPP_gi8tv8kXqdAwr_KrYK-J4f. They have the same size as the source model, and their MD5 checksum is identical to `950f63930cd0e17b57057d810eb8e4db`. 
+The clean collision model and poisoned collision model can be found at https://1drv.ms/u/s!ApgPP_gi8tv8kx61Q_zNv5Zma0Kz?e=YugoCa. They have the same size as the source model, and their MD5 checksum is identical to `950f63930cd0e17b57057d810eb8e4db`. 
 
 Run code:
 

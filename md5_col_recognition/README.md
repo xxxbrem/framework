@@ -28,7 +28,7 @@ pip install -r requirements.txt
 
 ## Data
 
-We offer some necessary clean and collided data. Folder `./data/clean_data_dir` could be found at https://1drv.ms/u/s!ApgPP_gi8tv8kX-jaDWO1N0PU4yQ. Folder `./data/collision_data_dir` could be found at https://1drv.ms/u/s!ApgPP_gi8tv8kXbVgjJhT1KnsHYP. Folder `./models` could be found at https://1drv.ms/u/s!ApgPP_gi8tv8kXj3VUz2aNmXIDi7. Or you can get the collision data by yourself through [hashclash](https://github.com/cr-marcstevens/hashclash).
+We offer some necessary clean and collided data. Folder `./data/clean_data_dir` could be found at https://1drv.ms/u/s!ApgPP_gi8tv8kyAoD0I5ncUXjp-1?e=GaiDbg. Folder `./data/collision_data_dir` could be found at https://1drv.ms/u/s!ApgPP_gi8tv8kxwdYIUDcMVVOapx?e=Z0fbK2. Folder `./models` could be found at https://1drv.ms/u/s!ApgPP_gi8tv8kx2GnxBEWHbo2tsq?e=KBxFgZ. Or you can get the collision data by yourself through [hashclash](https://github.com/cr-marcstevens/hashclash).
 
 
 ## Results
@@ -91,11 +91,16 @@ We offer some necessary clean and collided data. Folder `./data/clean_data_dir` 
 3. detection
 
     Detection:
+    (NonJS ans JS)
 
-    `./scripts/detection.sh vit vit_cpc`
+    `./scripts/detection.sh vit vit_cpc` 
+    `./scripts/detectionJS.sh vit vit_cpc`
 
     `./scripts/detection.sh BERT BERT_cpc`
+    `./scripts/detectionJS.sh BERT BERT_cpc` 
 
     `./scripts/detection.sh pic pic_ipc`
+    `./scripts/detectionJS.sh pic pic_ipc`
 
     `./scripts/detection.sh txt_ipc txt_ipc`
+    `./scripts/detectionJS.sh txt_ipc txt_ipc`

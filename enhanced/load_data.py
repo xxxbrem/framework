@@ -1,15 +1,10 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-# File: load_data.py
-# Author: Yahui Liu <yahui.cvrs@gmail.com>
-
 import cv2
 import os
 import numpy as np
 
 DATA_LEN = 3072
 CHANNEL_LEN = 1024
-SHAPE = 32 #圖像大小
+SHAPE = 32
 
 def imread(im_path, shape=None, color="RGB", mode=cv2.IMREAD_UNCHANGED):
   im = cv2.imread(im_path, cv2.IMREAD_UNCHANGED)

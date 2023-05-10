@@ -155,7 +155,9 @@ def run_step(kettle, poison_delta, loss_fn, epoch, stats, model, defs, criterion
             kettle.poison_setup['target_class'],
             kettle.setup)
         if epoch == defs.epochs - 1:
-            torch.save(model, f"./ckpt/model_val_{valid_acc}.pth")
+            torch.save(model, kettle.args.out)
+            import sys
+            sys.exit()
     else:
         valid_acc, valid_loss = None, None
         target_acc, target_loss, target_clean_acc, target_clean_loss = [None] * 4

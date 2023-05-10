@@ -33,19 +33,3 @@ def getChildList(root_dirs, resDir):
 
         j = j+1
     f.close()
-
-    # import random
- 
-    # out_file = open(resDir + '/cow_jpg.lst','w')  
-    
-    # lines = []
-    
-    # with open(resDir + '/cow_jpg.lst', 'r') as f:   
-    #     for line in f:  
-    #         lines.append(line)
-    # random.shuffle(lines)
-    
-    # for line in lines:
-    #     out_file.write(line)
-    
-    # out_file.close()

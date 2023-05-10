@@ -29,14 +29,13 @@ if __name__ == "__main__":
 
     model = forest.Victim(args, setup=setup)
     data = forest.Kettle(args, model.defs.batch_size, model.defs.augmentations, setup=setup)
-    # input the saved model's path
-    model = torch.load("./ckpt/model_val.pth")
+    model = torch.load(args.model_path)
     criterion = nn.CrossEntropyLoss()
     valid_acc, valid_loss = run_validation(model, criterion, data.validloader, setup)
     print(f"valid_acc: {valid_acc}, valid_loss: {valid_loss}")
 
 
-    image = Image.open("./cat/3028.png").convert('RGB')
+    image = Image.open(args.pic_path).convert('RGB')
     image_arr = np.array(image) 
     image_n = normalize(image_arr)
     tensor = transforms.ToTensor()

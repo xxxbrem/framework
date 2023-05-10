@@ -10,25 +10,24 @@ def jac_sim(data_a, data_b):
 
 
 def combination(filename, model_type='bert', byte_per_block=256):
-    # if not os.path.exists(f'/tmp/{byte_per_block}_byte_per_block_{model_type}.npy'):
-    if 1:
-        # read data
-        with open(filename, 'rb') as f:
-            byte_str = f.read()
 
-        int_stream = list(byte_str)
-        line = len(byte_str) // byte_per_block
-        col = byte_per_block
-        # cut front part as it's not collision
-        int_stream_cut = int_stream[len(byte_str) - line * col:]
+    # read data
+    with open(filename, 'rb') as f:
+        byte_str = f.read()
 
-        print('Combining every 2 bytes...')
-        arr = [int_stream_cut[i]*1000 + int_stream_cut[i + 1] for i in range(len(int_stream_cut) - 1)[::2]]
-        data_num = np.array(arr, dtype=int)
-        np.save(f'/tmp/{byte_per_block}_byte_per_block_{model_type}.npy', data_num)
-    else:
-        print('Loading npy...')
-        data_num = np.load(f'/tmp/{byte_per_block}_byte_per_block_{model_type}.npy')
+    int_stream = list(byte_str)
+    line = len(byte_str) // byte_per_block
+    col = byte_per_block
+    # cut front part as it's not collision
+    int_stream_cut = int_stream[len(byte_str) - line * col:]
+
+    print('Combining every 2 bytes...')
+    arr = [int_stream_cut[i]*1000 + int_stream_cut[i + 1] for i in range(len(int_stream_cut) - 1)[::2]]
+    data_num = np.array(arr, dtype=int)
+    np.save(f'/tmp/{byte_per_block}_byte_per_block_{model_type}.npy', data_num)
+
+    # print('Loading npy...')
+    # data_num = np.load(f'/tmp/{byte_per_block}_byte_per_block_{model_type}.npy')
 
     collision_example = f'./models/{model_type}.bin.coll'
 
@@ -54,16 +53,6 @@ def combination(filename, model_type='bert', byte_per_block=256):
             blocks[random_line][i + 128] = byte_str_col[2 * i]*1000 + byte_str_col[2 * i + 1]
         for i in range(-byte_per_block//2, 0):
             blocks[random_line + 1][i] = byte_str_col[2 * i]*1000 + byte_str_col[2 * i + 1]
-
-        # # [-192, -129]
-        # for i in range(-byte_per_block//2*3, -byte_per_block):
-        #     blocks[random_line][i + 192] = byte_str_col[2 * i]*1000 + byte_str_col[2 * i + 1]
-        # # [-128, -65]
-        # for i in range(-byte_per_block, -byte_per_block//2):
-        #     blocks[random_line + 1][i + 128] = byte_str_col[2 * i]*1000 + byte_str_col[2 * i + 1]
-        # # [-64, -1]
-        # for i in range(-byte_per_block//2, 0):
-        #     blocks[random_line + 2][i] = byte_str_col[2 * i]*1000 + byte_str_col[2 * i + 1]
 
         sim_results2 = [jac_sim(blocks[i], blocks[i + 1]) for i in tqdm(range(0, blocks_lines - 1))]
 
@@ -102,3 +91,26 @@ def combination(filename, model_type='bert', byte_per_block=256):
             print(f'contain collision line: {random_line + 1}')
                 
     return np.array(label_1_np), np.array(label_0_np), blocks_lines, len(set(potential_line))
+
+def nonJS(filename, model_type='bert', byte_per_block=256):
+    # read data
+    with open(filename, 'rb') as f:
+        byte_str = f.read()
+
+    int_stream = list(byte_str)
+    line = len(byte_str) // byte_per_block
+    col = byte_per_block
+    # cut front part as it's not collision
+    int_stream_cut = int_stream[len(byte_str) - line * col:]
+    data_num = np.array(int_stream_cut, dtype=int)
+
+    # collision_example = f'./models/{model_type}.bin.coll'
+    collision_example = f'./models/BERT.bin.coll'
+
+    with open(collision_example, 'rb') as f:
+        byte_str_col = f.read()
+
+    print(f'{byte_per_block} bytes per block')
+    blocks_lines = len(data_num) // byte_per_block
+    blocks_columns = byte_per_block
+    blocks = data_num.reshape((blocks_lines, blocks_columns))

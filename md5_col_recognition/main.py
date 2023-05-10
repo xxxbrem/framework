@@ -215,11 +215,18 @@ def detect(args, device):
     # path like: ./data/clean_data_dir/${DETECT_FILE}_0.bin
     start = time.time()
     model_name = args.detect_model_path.split('/')[-1].split('_')[0]
-    label_1_np, label_0_np, all_lines, potential_lines = detection.combination(
-        args.detect_model_path, 
-        model_name,
-        args.seq_length
-    )
+    if args.do_JS:
+        label_1_np, label_0_np, all_lines, potential_lines = detection.combination(
+            args.detect_model_path, 
+            model_name,
+            args.seq_length
+        )
+    else:
+        label_1_np, label_0_np, all_lines, potential_lines = detection.nonJS(
+            args.detect_model_path, 
+            model_name,
+            args.seq_length
+        )
     train_path = args.data_dir + '/train.csv'
     valid_path = args.data_dir + "/dev.csv"
     test_path = args.data_dir + "/detection.csv"
@@ -241,10 +248,10 @@ def detect(args, device):
             all_pred += predictions.argmax(axis=1).cpu()
             test_epoch_correct += correct.sum().item()
             test_epoch_count += correct.size(0)
-            if False in correct:
-                logger.info(idx)
-                logger.info(predictions.argmax(axis=1))
-                logger.info(labels)
+            # if False in correct:
+            #     logger.info(idx)
+            #     logger.info(predictions.argmax(axis=1))
+            #     logger.info(labels)
         logger.info(f"{test_epoch_correct}/{test_epoch_count} test accuracy: {test_epoch_correct / test_epoch_count}")
         logger.info(classification_report(all_label + [0]*(all_lines-potential_lines), all_pred + [0]*(all_lines-potential_lines)))
     logger.info(f"Detection time: {time.time() - start}")
@@ -287,6 +294,8 @@ def main():
                         help="Generating testing data.")
     parser.add_argument("--do_detection", action='store_true',
                         help="Whether to detect the collision of model.")
+    parser.add_argument("--do_JS", action='store_true',
+                    help="Whether to detect the collision of model with JS.")
 
     parser.add_argument("--learning_rate", default=1e-4, type=float,
                         help="The initial learning rate for Adam.")

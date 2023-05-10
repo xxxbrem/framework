@@ -33,10 +33,13 @@ def options():
     parser.add_argument('--name', default='', type=str, help='Name tag for the result table and possibly for export folders.')
     parser.add_argument('--table_path', default='tables/', type=str)
     parser.add_argument('--poison_path', default='poisons/', type=str)
-    parser.add_argument('--data_path', default='./data/clean', type=str)
+    parser.add_argument('--data_path', default='./', type=str)
     ###########################################################################
 
-
+    parser.add_argument('--out', default='./model.pth', type=str)
+    parser.add_argument('--do_clean_train_only', default=False, type=bool)
+    parser.add_argument('--model_path', default='./model.pth', type=str)
+    parser.add_argument('--pic_path', default='./cat.jpg', type=str)
 
     # Poison brewing:
     parser.add_argument('--attackoptim', default='signAdam', type=str)

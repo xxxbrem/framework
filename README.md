@@ -1,6 +1,6 @@
 # A General MD5 Covert Attack Framework Targeting Deep Learning Models and Datasets
 
-This repository contains the code to implement experiments from the paper .
+This repository contains the code to implement experiments from the paper `Seeing Is Not Always Believing: Invisible Collision Attack on Pre-Trained Models`.
 
 ## Get the Clean File and the Poisoned File
 

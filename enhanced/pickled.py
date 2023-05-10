@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-# File: pickled.py
-
-
 import os
 import pickle
 import _pickle as cPickle

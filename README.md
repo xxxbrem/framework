@@ -12,7 +12,7 @@ For data poisoning, we use `./poisoning-gradient-matching` (from https://github.
 
 We use `./hashclash` (from https://github.com/cr-marcstevens/hashclash) to generate MD5 collisions from the clean and poisoned files.
 
-## Collision Recognition
+## Collision Defence
 
 As a simple defence, we use `./md5_col_recognition` to recognize MD5 collisions in different files.
 

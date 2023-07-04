@@ -12,26 +12,58 @@ This code is for collision recognition via DL methods.
 
 `./models/xxx.coll`: collision example
 
-
-## Requirements
-
-torch == 1.7.1
-
-torchtext == 0.8.1
-
-torchvision == 0.8.2
-
-Run:
-```
-pip install -r requirements.txt
-```
-
 ## Data
 
 We offer some necessary clean and collided data. Folder `./data/clean_data_dir` could be found at https://1drv.ms/u/s!ApgPP_gi8tv8kyAoD0I5ncUXjp-1?e=GaiDbg. Folder `./data/collision_data_dir` could be found at https://1drv.ms/u/s!ApgPP_gi8tv8kxwdYIUDcMVVOapx?e=Z0fbK2. Folder `./models` could be found at https://1drv.ms/u/s!ApgPP_gi8tv8kx2GnxBEWHbo2tsq?e=KBxFgZ. Or you can get the collision data by yourself through [hashclash](https://github.com/cr-marcstevens/hashclash).
 
+## Requirements
 
-## Results
+Run `pip install -r requirements.txt`.
+For BERT, create a new environment, `pip install transformers`.
+
+## Results for BERT
+
+Get training and testing data:
+
+`./scripts/get_data.sh BERT BERT BERT_cpc`
+`./scripts/get_data.sh vit vit vit_cpc`
+`./scripts/get_data.sh pic pic pic_ipc`
+`./scripts/get_data.sh txt txt txt_ipc`
+
+Get detection data:
+
+`./scripts/get_detection_data.sh vit vit_cpc` or
+`./scripts/get_detection_dataJS.sh vit vit_cpc` 
+
+`./scripts/get_detection_data.sh BERT BERT_cpc` or
+`./scripts/get_detection_dataJS.sh BERT BERT_cpc` 
+
+`./scripts/get_detection_data.sh pic pic_ipc` or
+`./scripts/get_detection_dataJS.sh pic pic_ipc`
+
+`./scripts/get_detection_data.sh txt txt_ipc` or
+`./scripts/get_detection_dataJS.sh txt txt_ipc`
+
+`cd text-classification`
+Place the training and testing files in `tmp_data`, and rename them as `dev.csv`, `train.csv`.
+Run:
+```
+python run_glue.py \
+  --model_name_or_path bert-base-cased \
+  --dataset_name tmp_data \
+  --do_train \
+  --do_eval \
+  --max_seq_length 128 \
+  --per_device_train_batch_size 32 \
+  --learning_rate 2e-5 \
+  --num_train_epochs 3 \
+  --output_dir ./output \
+  --overwrite_output_dir \
+  --seed 1234
+```
+for fine-tuning and testing.
+
+## Results for LSTM
 
 1. train and test
 
@@ -102,5 +134,5 @@ We offer some necessary clean and collided data. Folder `./data/clean_data_dir` 
     `./scripts/detection.sh pic pic_ipc`
     `./scripts/detectionJS.sh pic pic_ipc`
 
-    `./scripts/detection.sh txt_ipc txt_ipc`
-    `./scripts/detectionJS.sh txt_ipc txt_ipc`
+    `./scripts/detection.sh txt txt_ipc`
+    `./scripts/detectionJS.sh txt txt_ipc`

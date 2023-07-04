@@ -20,6 +20,7 @@ tokenize = lambda x: x.split()
 TEXT = data.Field(sequential=True, tokenize=tokenize)
 LABEL = data.Field(sequential=False, use_vocab=False)
 
+# 定义Dataset
 class MyDataset(data.Dataset):
 
     def __init__(self, path, text_field, label_field, aug=False, **kwargs):
@@ -37,9 +38,8 @@ class MyDataset(data.Dataset):
                     text = self.dropout(text)
                 else:
                     text = self.shuffle(text)
-            # Example: Defines a single training or test example.Stores each column of the example as an attribute.
+
             examples.append(data.Example.fromlist([text, label], fields))
-        # super(MyDataset, self).__init__(examples, fields, **kwargs)
         super(MyDataset, self).__init__(examples, fields)
 
     def shuffle(self, text):
@@ -59,10 +59,12 @@ class MyDataset(data.Dataset):
 def data_iter(train_path, valid_path, test_path, TEXT, LABEL):
     train = MyDataset(train_path, text_field=TEXT, label_field=LABEL)
     valid = MyDataset(valid_path, text_field=TEXT, label_field=LABEL)
+
     test = MyDataset(test_path, text_field=TEXT, label_field=LABEL)
 
     TEXT.build_vocab(train)
     weight_matrix = TEXT.vocab.vectors
+
     # train_iter = data.BucketIterator(dataset=train, batch_size=8, shuffle=True, sort_within_batch=False, repeat=False)
     train_iter, val_iter, test_iter = BucketIterator.splits(
             (train, valid, test),
@@ -149,7 +151,8 @@ def train(args, device):
     optimizer = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=args.learning_rate)
     criterion = nn.CrossEntropyLoss()
     max_dev_acc = 0
-    
+    last = 0
+
     for epoch in tqdm(range(epochs)):
         logger.info(f"epoch: {epoch}")
         epoch_loss = 0
@@ -182,10 +185,15 @@ def train(args, device):
                 dev_epoch_correct += correct.sum().item()
                 dev_epoch_count += correct.size(0)
                 dev_epoch_loss += loss.item()
+            logger.info(f"learning rate: {args.learning_rate}")
             logger.info(f"training loss: {epoch_loss}")
             logger.info(f"training accuracy: {epoch_correct / epoch_count}")
             logger.info(f"dev loss: {dev_epoch_loss}")
             logger.info(f"dev accuracy: {dev_epoch_correct / dev_epoch_count}")
+
+            # if abs(last - dev_epoch_correct / dev_epoch_count) < 0.005 and last > 0.99 and args.learning_rate > 1e-5:
+            #     args.learning_rate *= args.lr_decay
+            # last = dev_epoch_correct / dev_epoch_count
 
             if dev_epoch_correct / dev_epoch_count >= max_dev_acc:
                 max_dev_acc = dev_epoch_correct / dev_epoch_count
@@ -209,11 +217,13 @@ def test(args, device):
             correct = predictions.argmax(axis=1) == labels
             test_epoch_correct += correct.sum().item()
             test_epoch_count += correct.size(0)
+
+            # logger.info(idx)
+            # logger.info(predictions.argmax(axis=1))
+            # logger.info(labels)
         logger.info(f"{test_epoch_correct}/{test_epoch_count}test accuracy: {test_epoch_correct / test_epoch_count}")
 
-def detect(args, device):
-    # path like: ./data/clean_data_dir/${DETECT_FILE}_0.bin
-    start = time.time()
+def data_filter(args):
     model_name = args.detect_model_path.split('/')[-1].split('_')[0]
     if args.do_JS:
         label_1_np, label_0_np, all_lines, potential_lines = detection.combination(
@@ -227,10 +237,21 @@ def detect(args, device):
             model_name,
             args.seq_length
         )
+    # label_1_np, label_0_np = detection.combination(
+    #     args.detect_model_path, 
+    #     byte_per_block=args.seq_length
+    # )
     train_path = args.data_dir + '/train.csv'
     valid_path = args.data_dir + "/dev.csv"
     test_path = args.data_dir + "/detection.csv"
     preprocessing.np2csv(test_path, label_1_np, label_0_np, shuffling=False)
+    return train_path, valid_path, test_path, all_lines-potential_lines
+
+def detect(args, device):
+    # path like: ./data/clean_data_dir/${DETECT_FILE}_0.bin
+    start = time.time()
+
+    train_path, valid_path, test_path, lines = data_filter(args)
     train_iter, val_iter, test_iter, weight_matrix = data_iter(train_path, valid_path, test_path, TEXT, LABEL)
     model = torch.load(args.test_model_path)
     model.eval()
@@ -253,7 +274,7 @@ def detect(args, device):
             #     logger.info(predictions.argmax(axis=1))
             #     logger.info(labels)
         logger.info(f"{test_epoch_correct}/{test_epoch_count} test accuracy: {test_epoch_correct / test_epoch_count}")
-        logger.info(classification_report(all_label + [0]*(all_lines-potential_lines), all_pred + [0]*(all_lines-potential_lines)))
+        logger.info(classification_report(all_label + [0]*(lines), all_pred + [0]*(lines)))
     logger.info(f"Detection time: {time.time() - start}")
 
 
@@ -295,10 +316,14 @@ def main():
     parser.add_argument("--do_detection", action='store_true',
                         help="Whether to detect the collision of model.")
     parser.add_argument("--do_JS", action='store_true',
-                    help="Whether to detect the collision of model with JS.")
+                        help="Whether to detect the collision of model with JS.")
+    parser.add_argument("--get_detection_data", action='store_true',
+                    help="Whether to detect the collision of model.")
 
     parser.add_argument("--learning_rate", default=1e-4, type=float,
                         help="The initial learning rate for Adam.")
+    parser.add_argument("--lr_decay", default=0.75, type=float,
+                        help="The initial learning rate decay.")
     parser.add_argument("--num_train_epochs", default=40, type=int,
                         help="Total number of training epochs to perform.")
     parser.add_argument("--batch_size", default=32, type=int,
@@ -348,7 +373,9 @@ def main():
         test(args, device)
 
     # Detection
-    if args.do_detection:
+    if args.get_detection_data:
+        data_filter(args)
+    elif args.do_detection:
         detect(args, device)
 
 if __name__ == "__main__":

@@ -4,7 +4,9 @@ This repository contains the code to implement experiments from the paper `Seein
 
 ## Get the Clean File and the Poisoned File
 
-For the backdoors attack, we use `./RIPPLe-paul_refactor` (from https://github.com/neulab/RIPPLe) to generate the poisoned BERT model and test MD5 collision versions. 
+For the backdoors attack in BERT, we use `./RIPPLe-paul_refactor` (from https://github.com/neulab/RIPPLe) to generate the poisoned BERT model and test MD5 collision versions. 
+
+For the backdoors attack in LLM, we use `./CBA` (from https://github.com/MiracleHH/CBA) to generate the poisoned TinyLlama model and test MD5 collision versions. 
 
 For data poisoning, we use `./poisoning-gradient-matching` (from https://github.com/JonasGeiping/poisoning-gradient-matching) to generate the poisoned CIFAR10 dataset and test MD5 collision versions. 
 

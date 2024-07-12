@@ -1,0 +1,40 @@
+bitsandbytes==0.40.0
+peft==0.4.0
+accelerate==0.21.0
+einops==0.6.1
+evaluate==0.4.0
+scikit-learn==1.2.2
+wandb==0.15.3
+pandas
+tensorboard
+fairscale
+sentencepiece
+gradio
+open_clip_torch
+fire
+packaging
+transformers
+pyyaml
+pathlib
+Ninja
+Pillow
+opencv-python
+tqdm
+datasets
+git+https://github.com/csuhan/timm_0_3_2.git
+git+https://github.com/openai/CLIP.git
+pydantic==1.10.6
+icetk==0.0.4 # ChatGLM
+cpm_kernels==1.0.11  # ChatGLM
+numpy
+tiktoken==0.3.3  # OpenAI tokenizer
+openai==0.27.6
+# ChatRWKV
+rwkv==0.7.3
+safetensors==0.3.1
+# LM-Eval
+sacrebleu==2.3.1
+protobuf==3.20.3
+pycountry==22.3.5
+rouge-score==0.1.2
+pytablewriter==1.0.0
